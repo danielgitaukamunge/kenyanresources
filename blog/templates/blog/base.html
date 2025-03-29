@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- Custom CSS for hover dropdown -->
+    <style>
+        .navbar-nav .dropdown-menu {
+            display: none;
+        }
+        .navbar-nav .dropdown-menu.show {
+            display: block;
+        }
+    </style>
+
+    {% if title %}
+        <title>KenyanResources - {{ title }}</title>
+    {% else %}
+        <title>KenyanResources Blog</title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+          <div class="container">
+            <a class="navbar-brand mr-4" href="{% url 'blog-home' %}">Kenyan Resources</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggle">
+              <div class="navbar-nav mr-auto">
+                <a class="nav-item nav-link" href="{% url 'blog-home' %}">Blog</a>
+
+                <!-- Cyber Services Dropdown -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="{% url 'services-home' %}" id="cyberServicesDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Cyber Services
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="cyberServicesDropdown">
+                    <a class="dropdown-item" href="#">NTSA Services</a>
+                    <a class="dropdown-item" href="#">KRA Services</a>
+                    <a class="dropdown-item" href="#">Business Registration Services</a>
+                    <a class="dropdown-item" href="#">Immigration (Passport) Services</a>
+                    <a class="dropdown-item" href="#">DCI (Good Conduct) Services</a>
+                    <a class="dropdown-item" href="#">Registration Bureau (ID) Services</a>
+                    <a class="dropdown-item" href="#">Other Services</a>
+                  </div>
+                </li>
+
+                 <!-- Printing Services Dropdown -->
+                 <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="{% url 'printing-home' %}" id="printingservicesDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Printing Services
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="studentsResourcesDropdown">
+                    <a class="dropdown-item" href="#">Receipt Books</a>
+                    <a class="dropdown-item" href="#">ID size Cards</a>
+                    <a class="dropdown-item" href="#">Name Tags</a>
+                    <a class="dropdown-item" href="#">Water Labels</a>
+                    <a class="dropdown-item" href="#">Invitation Cards</a>
+                    <a class="dropdown-item" href="#">Institution Certificates</a>
+                    <a class="dropdown-item" href="#">Posters/Flyers</a>
+                    <a class="dropdown-item" href="#">Printing, Copying & Scanning</a>
+                    <a class="dropdown-item" href="#">Others</a>
+                  </div>
+                </li>
+
+
+                <!-- Students' Resources Dropdown -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="{% url 'resources-home' %}" id="studentsResourcesDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Students' Resources
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="studentsResourcesDropdown">
+                    <a class="dropdown-item" href="{% url 'schemes-of-work' %}">Schemes of Work</a>
+                    <a class="dropdown-item" href="#">Notes</a>
+                    <a class="dropdown-item" href="#">Exam Papers</a>
+                    <a class="dropdown-item" href="#">Holiday Assignments</a>
+                    <a class="dropdown-item" href="#">IT and Tech Resources</a>
+                    <a class="dropdown-item" href="#">Others</a>
+                    <a class="dropdown-item" href="{% url 'resources-history' %}">Resources History</a>
+                  </div>
+                </li>
+
+                <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
+              </div>
+              <!-- Navbar Right Side -->
+              <div class="navbar-nav">
+                {% if user.is_authenticated %}
+                  <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>  
+                  <div class="nav-item">
+                    <form action="{% url 'logout' %}" method="post" class="nav-item nav-link">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-link nav-link p-0 border-0">Logout</button>
+                    </form>
+                  </div>
+                {% else %}
+                  <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                  <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <main role="main" class="container">
+        <div class="row">
+          <!-- Main Content Column -->
+          <div class="col-md-8">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+            {% block content %}{% endblock %}
+          </div>
+          <!-- Sidebar Column -->
+          <div class="col-md-4">
+            <!-- Request Service Form -->
+            <div class="content-section">
+              <h4>Request Service</h4>
+              <form id="whatsappForm" onsubmit="redirectToWhatsApp(event)">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="serviceName" placeholder="Enter the name of the service or resource" required>
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control" id="serviceDescription" rows="3" placeholder="Describe the service you need (e.g., printing service)" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success btn-block" style="background-color: #25D366; border-color: #25D366;">
+                  <i class="fa-brands fa-whatsapp"></i> Send Message Via WhatsApp
+              </button>              
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <!-- Custom JavaScript for hover dropdown and clickable main tab -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+
+        dropdownToggles.forEach(toggle => {
+          const dropdownMenu = toggle.nextElementSibling;
+
+          // Show dropdown on hover
+          toggle.addEventListener('mouseenter', function() {
+            dropdownMenu.classList.add('show');
+          });
+
+          // Hide dropdown when mouse leaves
+          toggle.parentElement.addEventListener('mouseleave', function() {
+            dropdownMenu.classList.remove('show');
+          });
+
+          // Ensure main tab is clickable
+          toggle.addEventListener('click', function(e) {
+            if (!dropdownMenu.classList.contains('show')) {
+              window.location.href = toggle.getAttribute('href');
+            }
+          });
+        });
+      });
+    </script>
+
+    <script>
+      function redirectToWhatsApp(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+    
+        // Get the form inputs
+        const serviceName = document.getElementById('serviceName').value;
+        const serviceDescription = document.getElementById('serviceDescription').value;
+    
+        // Create the WhatsApp message
+        const message = `Hello, I would like to request a service.\n\nService Name: ${serviceName}\nDescription: ${serviceDescription}`;
+    
+        // Encode the message for use in a URL
+        const encodedMessage = encodeURIComponent(message);
+    
+        // Create the WhatsApp Click-to-Chat link
+        const whatsappLink = `https://wa.me/254115387838?text=${encodedMessage}`;
+    
+        // Redirect the user to WhatsApp
+        window.location.href = whatsappLink;
+      }
+    </script>
+
+</body>
+</html>

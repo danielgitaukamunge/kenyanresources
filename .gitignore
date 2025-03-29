@@ -1,0 +1,7 @@
+# Django
+.env
+venv/
+__pycache__/
+*.pyc
+/media/
+/staticfiles/
