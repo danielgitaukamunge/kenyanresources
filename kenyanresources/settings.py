@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = True
-ALLOWED_HOSTS = ['kenyanresources-b61830586c6e.herokuapp.com']
+ALLOWED_HOSTS = ['kenyanresources-b61830586c6e.herokuapp.com', '*',]
 
 # Database
 DATABASES = {
