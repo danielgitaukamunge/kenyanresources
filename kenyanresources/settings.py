@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = True
-ALLOWED_HOSTS = ['kenyanresources-b61830586c6e.herokuapp.com', '*',]
+ALLOWED_HOSTS = ['*',]
 
 # Database
 DATABASES = {
@@ -149,7 +149,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
 STATIC_URL = 'static/'
 
 # Default primary key field type

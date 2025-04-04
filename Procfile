@@ -1,1 +1,0 @@
-web: gunicorn kenyanresources.wsgi
