@@ -22,9 +22,8 @@ from blog.sitemap import PostSitemap
 from django.conf import settings
 from django.conf.urls.static import static
 from users import views as user_views
-from services import views as services_views
-from printing import views as printing_views
-from resources import views as resources_views
+from django.views.generic.base import TemplateView
+from blog.views import HomeView
 
 sitemaps = {
     'posts': PostSitemap,
@@ -41,12 +40,20 @@ urlpatterns = [
     path('password-reset/done', auth_views.PasswordResetDoneView.as_view(template_name='users/password_rest_done.html'), name='password_reset_done'),
     path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='users/password_rest_confirm.html'), name='password_reset_confirm'),
     path('password-reset-complete', auth_views.PasswordResetCompleteView.as_view(template_name='users/password_rest_complete.html'), name='password_reset_complete'),
-    path('', include('blog.urls')),
+    path('', HomeView.as_view(), name='site-home'),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('blog/', include('blog.urls')),
     path('', include('services.urls')),
     path('', include('printing.urls')),
     path('', include('resources.urls')),
     path('', include('lipa.urls')),
+    path(
+        "robots.txt",
+        TemplateView.as_view(
+            template_name="robots.txt",
+            content_type="text/plain"
+        ),
+    ),
 ]
 
 if settings.DEBUG:
